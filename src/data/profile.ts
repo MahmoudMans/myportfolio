@@ -16,7 +16,7 @@ export const profile: Profile = {
     {
       icon: "web",
       title: "Software development",
-      body: "Full-stack web and mobile applications, mostly with Spring Boot and Next.js: TenderPilot and ProcureIQ for procurement, TerraScope for disaster response, VentureScope for startup finance, BuildFlow and BuildSight for construction, Economofar, an iPhone app for receipts and budgets, and a program management system with mobile and web apps.",
+      body: "Full-stack web and mobile applications, mostly with Spring Boot and Next.js: TenderPilot and ProcureIQ for procurement, TerraScope for disaster response, VentureScope for startup finance, BuildFlow and BuildSight for construction, Economofar, an iPhone app for receipts and budgets, Smart-Dépannage, a home-repair dispatch platform with a phone app for technicians, and a program management system with mobile and web apps.",
       tools: ["Java", "Spring Boot", "Next.js", "React", "PostgreSQL", "React Native", "SwiftUI"],
     },
     {
