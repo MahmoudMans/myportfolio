@@ -1,10 +1,19 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import "@fontsource-variable/schibsted-grotesk/wght.css";
 import "./globals.css";
 import { SiteShell } from "@/components/layout/site-shell";
 import { site } from "@/data/site";
 import { ogImage } from "@/lib/metadata";
+
+const headingFont = localFont({
+  src: "../fonts/bricolage-grotesque.woff",
+  weight: "500 800",
+  style: "normal",
+  display: "swap",
+  variable: "--font-bricolage",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -36,15 +45,15 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f7f9" },
-    { media: "(prefers-color-scheme: dark)", color: "#070c16" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f5f0" },
+    { media: "(prefers-color-scheme: dark)", color: "#06101f" },
   ],
   colorScheme: "light dark",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang="en" className={headingFont.variable} suppressHydrationWarning data-scroll-behavior="smooth">
       <body>
         <SiteShell>{children}</SiteShell>
       </body>

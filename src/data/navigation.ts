@@ -13,7 +13,7 @@ export const mainNav: NavItem[] = [
 export const pages: { label: string; href: string; hint: string; keywords: string[] }[] = [
   { label: "Home", href: "/", hint: "Start page", keywords: ["start", "index", "landing"] },
   { label: "All projects", href: "/projects", hint: "Filter and search", keywords: ["work", "portfolio"] },
-  { label: "Interactive CV", href: "/cv", hint: "Education, experience, skills", keywords: ["resume", "cv", "education"] },
+  { label: "CV", href: "/cv", hint: "Experience, education, skills, print", keywords: ["resume", "cv", "education", "print"] },
   { label: "LinkedIn posts", href: "/posts", hint: "Events, certifications, milestones", keywords: ["posts", "linkedin", "news", "activity"] },
 ];
 

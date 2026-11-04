@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { BackToTop } from "@/components/layout/back-to-top";
+import { NavTransitionWatcher } from "@/components/layout/nav-transition-watcher";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { CommandPalette } from "@/components/palette/command-palette";
@@ -22,6 +23,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
       </main>
       <SiteFooter />
       <BackToTop label={ui.backToTop} />
+      <NavTransitionWatcher />
       <CommandPalette items={buildPaletteItems()} cvHref="/cv.pdf" cvFileName={site.cvFileName} />
     </Providers>
   );

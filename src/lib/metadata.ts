@@ -8,6 +8,7 @@ interface PageMetadataInput {
   type?: "website" | "article";
   publishedTime?: string;
   tags?: string[];
+  image?: { url: string; alt: string };
 }
 
 export const ogImage = {
@@ -17,14 +18,15 @@ export const ogImage = {
   alt: site.ogImageAlt,
 };
 
-export function pageMetadata({ title, description, path, type = "website", publishedTime, tags }: PageMetadataInput): Metadata {
+export function pageMetadata({ title, description, path, type = "website", publishedTime, tags, image }: PageMetadataInput): Metadata {
+  const shareImage = image ?? ogImage;
   const openGraphBase = {
     title,
     description,
     url: path,
     siteName: site.name,
     locale: site.locale,
-    images: [ogImage],
+    images: [shareImage],
   };
   return {
     title,
@@ -39,7 +41,11 @@ export function pageMetadata({ title, description, path, type = "website", publi
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage.url],
+      images: [shareImage.url],
     },
   };
+}
+
+export function jsonLd(data: Record<string, unknown>): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }

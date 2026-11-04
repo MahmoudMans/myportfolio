@@ -141,6 +141,28 @@ class CvWriter {
     }
   }
 
+  project(title: string, href: string, summary: string, details: string): void {
+    const size = 10.5;
+    const linkSize = 8.5;
+    const summarySize = 9.2;
+    const summaryLine = 12.4;
+    const detailSize = 8.3;
+    const detailLine = 11;
+    const linkText = toWinAnsi(ui.cv.caseStudy);
+    const linkWidth = this.fonts.regular.widthOfTextAtSize(linkText, linkSize);
+    const summaryLines = this.wrap(summary, this.fonts.regular, summarySize, CONTENT_WIDTH).length;
+    const detailLines = this.wrap(details, this.fonts.regular, detailSize, CONTENT_WIDTH).length;
+    this.ensure(5 + size * 1.32 + summaryLines * summaryLine + detailLines * detailLine + 2);
+    this.y -= 5;
+    this.y -= size * 1.32;
+    this.page.drawText(toWinAnsi(title), { x: MARGIN_X, y: this.y, size, font: this.fonts.bold, color: INK });
+    const linkX = PAGE_WIDTH - MARGIN_X - linkWidth;
+    this.page.drawText(linkText, { x: linkX, y: this.y, size: linkSize, font: this.fonts.regular, color: ACCENT });
+    this.link(href, linkX, this.y - 2, linkWidth, linkSize + 4);
+    this.paragraph(summary, { size: summarySize, lineHeight: summaryLine });
+    this.paragraph(details, { size: detailSize, color: MUTED, lineHeight: detailLine });
+  }
+
   role(title: string, detail: string, right: string, joiner = " at "): void {
     const size = 10;
     const rightSize = 9;
@@ -209,6 +231,7 @@ class CvWriter {
     const linkedin = profile.socials.find((social) => social.kind === "linkedin");
     const contacts: { label: string; href?: string }[] = [{ label: profile.email, href: `mailto:${profile.email}` }];
     if (profile.website) contacts.push({ label: profile.website.replace("https://", ""), href: profile.website });
+    else if (site.url.startsWith("https://")) contacts.push({ label: site.url.replace("https://", ""), href: site.url });
     if (github) contacts.push({ label: `github.com/${github.handle}`, href: github.href });
     if (linkedin) contacts.push({ label: `linkedin.com/${linkedin.handle}`, href: linkedin.href });
     this.inlineLinks(contacts, 9);
@@ -258,17 +281,27 @@ export async function buildCvPdf(): Promise<Uint8Array> {
     cv.entry(title, `${item.start} – ${item.end}`, `${item.institution}, ${item.location}`);
   }
 
-  cv.section("Personal projects");
-  for (const project of projects) {
-    cv.entry(project.title, "", `${project.description} Built with ${project.stack.join(", ")}.`);
+  cv.section(ui.cv.selectedProjects);
+  for (const project of projects.filter((item) => item.featured)) {
+    const proof = (project.facts ?? []).find((fact) => fact.label === "Tests" || fact.label === "Scale");
+    const details = [project.stack.slice(0, 7).join(", "), proof ? proof.value : ""].filter((part) => part.length > 0).join(". ");
+    cv.project(project.title, `${site.url}/projects/${project.slug}`, project.summary, `${details}.`);
   }
+  cv.space(4);
+  cv.inlineLinks(
+    [
+      { label: ui.cv.moreProjects },
+      ...projects.filter((item) => item.featured === false).map((item) => ({ label: item.title, href: `${site.url}/projects/${item.slug}` })),
+    ],
+    8.5,
+  );
 
   cv.section(ui.cv.certifications);
   for (const item of certifications) {
     cv.role(item.name, item.issuer, item.date ? formatYearMonth(item.date) : "", ", ");
   }
 
-  cv.section("Community");
+  cv.section(ui.cv.community);
   for (const item of communityRoles) {
     cv.role(item.role, item.organization, item.period, ", ");
   }

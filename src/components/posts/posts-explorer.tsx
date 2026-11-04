@@ -78,29 +78,31 @@ export function PostsExplorer({ posts, kinds }: PostsExplorerProps) {
       </p>
 
       {years.map(([year, items]) => (
-        <section key={year} aria-labelledby={`posts-${year}`} className="mt-10">
+        <section key={year} aria-labelledby={`posts-${year}`} className="posts-group">
           <h2 id={`posts-${year}`} className="posts-year">
             <span className="sr-only">{ui.posts.year} </span>
             {year}
           </h2>
-          <ol className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <ol className="posts-list">
             {items.map((post) => (
-              <li key={post.id} className="h-full">
+              <li key={post.id}>
                 <article id={`post-${post.id}`} className="post-card">
-                  <p className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
-                    <time dateTime={post.date} className="font-display font-semibold tabular-nums text-ink-2">
-                      {formatDate(post.date)}
-                    </time>
-                    <span className={kindBadge[post.kind]}>{post.kind}</span>
-                    {post.sharedFrom ? (
-                      <span className="text-ink-3">
-                        {ui.posts.sharedFrom} {post.sharedFrom}
-                      </span>
-                    ) : null}
+                  <p className="post-when">
+                    <time dateTime={post.date}>{formatDate(post.date)}</time>
                   </p>
-                  <h3 className="mt-2 font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl">{post.title}</h3>
-                  <p className="copy-sm mt-1.5 max-w-[70ch]">{post.summary}</p>
-                  <ResourceLinks links={postLinks(post)} label={`${post.title} links`} context={post.title} className="mt-auto pt-3" />
+                  <div className="min-w-0">
+                    <p className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
+                      <span className={kindBadge[post.kind]}>{post.kind}</span>
+                      {post.sharedFrom ? (
+                        <span className="text-ink-3">
+                          {ui.posts.sharedFrom} {post.sharedFrom}
+                        </span>
+                      ) : null}
+                    </p>
+                    <h3 className="mt-2 font-heading text-lg font-bold leading-snug tracking-[-0.006em] text-ink sm:text-xl">{post.title}</h3>
+                    <p className="copy-sm mt-1.5 max-w-[66ch]">{post.summary}</p>
+                  </div>
+                  <ResourceLinks links={postLinks(post)} label={`${post.title} links`} context={post.title} className="post-links" />
                 </article>
               </li>
             ))}

@@ -6,7 +6,7 @@ import { useEffect, useState, type ReactNode } from "react";
 let hasNavigated = false;
 
 export default function Template({ children }: { children: ReactNode }) {
-  const [animateIn] = useState(() => hasNavigated);
+  const [animateIn] = useState(() => hasNavigated && document.documentElement.dataset.navTransition === undefined);
 
   useEffect(() => {
     hasNavigated = true;

@@ -5,7 +5,7 @@ import { sections } from "@/data/sections";
 
 export function ExperienceSection() {
   return (
-    <Section {...sections.experience}>
+    <Section {...sections.experience} rail>
       <ExperienceList items={experience} />
     </Section>
   );

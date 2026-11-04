@@ -27,24 +27,22 @@ export function NowSection() {
         </p>
       }
     >
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {now.items.map((item, index) => {
-          const Icon = nowIcons[item.icon];
-          return (
-            <li key={item.label}>
-              <Reveal delay={index * 60} className="h-full">
-                <article className="now-card">
-                  <span className="tile-icon tile-icon-accent">
-                    <Icon aria-hidden="true" className="size-5" />
-                  </span>
-                  <h3 className="font-display text-sm font-bold text-ink">{item.label}</h3>
-                  <p className="copy-sm -mt-1.5">{item.text}</p>
-                </article>
-              </Reveal>
-            </li>
-          );
-        })}
-      </ul>
+      <Reveal>
+        <ul className="cell-panel cell-panel-4">
+          {now.items.map((item) => {
+            const Icon = nowIcons[item.icon];
+            return (
+              <li key={item.label} className="cell">
+                <h3 className="cell-label">
+                  <Icon aria-hidden="true" className="size-4 shrink-0 text-saffron-ink" />
+                  {item.label}
+                </h3>
+                <p className="cell-text">{item.text}</p>
+              </li>
+            );
+          })}
+        </ul>
+      </Reveal>
     </Section>
   );
 }

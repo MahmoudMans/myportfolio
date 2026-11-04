@@ -29,8 +29,8 @@ export default function OpengraphImage() {
           viewBox="0 0 360 480"
           style={{ position: "absolute", right: 64, top: 75, opacity: 0.5 }}
         >
-          {stars.map((d) => (
-            <path key={d} d={d} fill="none" stroke="#8db0ff" strokeWidth="2" strokeLinejoin="round" />
+          {stars.map((d, index) => (
+            <path key={d} d={d} fill="none" stroke={index % 2 === 0 ? "#8db0ff" : "#f2b84b"} strokeWidth="2" strokeLinejoin="round" />
           ))}
         </svg>
         <div
@@ -72,7 +72,7 @@ export default function OpengraphImage() {
           </div>
           <div style={{ display: "flex", gap: 12 }}>
             <div style={{ display: "flex", width: 160, height: 8, borderRadius: 4, background: "#8db0ff" }} />
-            <div style={{ display: "flex", width: 60, height: 8, borderRadius: 4, background: "#a9c46a" }} />
+            <div style={{ display: "flex", width: 60, height: 8, borderRadius: 4, background: "#f2b84b" }} />
           </div>
         </div>
       </div>

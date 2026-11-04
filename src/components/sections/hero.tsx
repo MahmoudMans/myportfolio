@@ -4,6 +4,7 @@ import { HeroShowcaseArt } from "@/components/hero/hero-showcase";
 import { GitHubIcon, LinkedInIcon } from "@/components/icons/brand-icons";
 import { PaletteHint } from "@/components/palette/palette-trigger";
 import { ButtonLink } from "@/components/ui/button-link";
+import { MarkedName } from "@/components/ui/khatam";
 import { Lattice } from "@/components/ui/lattice";
 import { Reveal } from "@/components/ui/reveal";
 import { TagList } from "@/components/ui/tags";
@@ -47,7 +48,7 @@ export function Hero() {
 
   return (
     <section id={sections.about.id} aria-labelledby="about-heading" className="hero">
-      <Lattice className="hero-lattice" />
+      <Lattice className="hero-lattice" draw />
       <div className="page-shell relative">
         <div className="grid grid-cols-1 items-center gap-x-12 gap-y-12 pt-12 pb-16 sm:pt-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:pt-20 lg:pb-24">
           <div className="hero-copy">
@@ -57,7 +58,7 @@ export function Hero() {
               <span className="hidden text-ink-3 sm:inline lg:hidden xl:inline">{profile.availability.detail}</span>
             </p>
             <h1 id="about-heading" className="hero-name">
-              {profile.name}
+              <MarkedName name={profile.name} />
             </h1>
             <p className="hero-headline">{profile.headline}</p>
             <p className="hero-tagline">{profile.tagline}</p>
@@ -129,7 +130,7 @@ export function Hero() {
                 />
               </div>
               <div className="min-w-0">
-                <p className="font-display text-lg font-bold leading-tight tracking-tight text-ink">{profile.name}</p>
+                <p className="font-heading text-lg font-bold leading-tight tracking-[-0.006em] text-ink">{profile.name}</p>
                 <p className="mt-1 text-sm text-ink-3">{profile.role}</p>
               </div>
             </div>
@@ -150,25 +151,23 @@ export function Hero() {
           </aside>
         </div>
 
-        <ul className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {profile.focus.map((area, index) => {
-            const Icon = focusIcons[area.icon];
-            return (
-              <li key={area.title}>
-                <Reveal delay={index * 70} className="h-full">
-                  <article className="focus-card">
-                    <span className="tile-icon tile-icon-accent">
-                      <Icon aria-hidden="true" className="size-5" />
-                    </span>
-                    <h3 className="font-display text-lg font-bold tracking-tight text-ink">{area.title}</h3>
-                    <p className="copy-sm">{area.body}</p>
-                    {area.tools ? <TagList items={area.tools} label={`${ui.projects.stack}, ${area.title}`} className="mt-auto pt-1" /> : null}
-                  </article>
-                </Reveal>
-              </li>
-            );
-          })}
-        </ul>
+        <Reveal>
+          <ul className="column-list column-list-3 mt-14">
+            {profile.focus.map((area) => {
+              const Icon = focusIcons[area.icon];
+              return (
+                <li key={area.title} className="column-item">
+                  <h3 className="column-title">
+                    <Icon aria-hidden="true" className="column-icon size-5" />
+                    {area.title}
+                  </h3>
+                  <p className="copy-sm">{area.body}</p>
+                  {area.tools ? <TagList items={area.tools} label={`${ui.projects.stack}, ${area.title}`} variant="inline" className="mt-auto pt-2" /> : null}
+                </li>
+              );
+            })}
+          </ul>
+        </Reveal>
       </div>
     </section>
   );

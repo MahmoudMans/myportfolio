@@ -1,4 +1,5 @@
 import { Briefcase, Building2, FlaskConical, GraduationCap, HandHeart, Laptop, type LucideIcon } from "lucide-react";
+import { Khatam } from "@/components/ui/khatam";
 import { Reveal } from "@/components/ui/reveal";
 import { TagList } from "@/components/ui/tags";
 import { ui } from "@/data/ui";
@@ -16,32 +17,29 @@ const kindIcons: Record<ExperienceKind, LucideIcon> = {
 
 export function ExperienceList({ items }: { items: Experience[] }) {
   return (
-    <ol className="xp-list">
-      {items.map((item, index) => {
-        const Icon = kindIcons[item.kind];
-        const current = item.end === null;
-        const detailed = Boolean(item.summary || item.highlights?.length || item.results?.length || item.tools?.length);
-        return (
-          <li key={item.id} className="xp-item">
-            <span className={cn("xp-node", current && "xp-node-current")} aria-hidden="true">
-              <Icon className="size-[18px]" />
-            </span>
-            <Reveal delay={Math.min(index, 4) * 40}>
-              <article className={cn("xp-card", current && "xp-card-current")}>
-                <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="min-w-0">
-                    <h3 className="font-display text-lg font-bold leading-snug tracking-tight text-ink sm:text-xl">{item.role}</h3>
-                    <p className="mt-0.5 text-[0.96875rem] font-semibold text-ink-2">
-                      {item.organization}
-                      <span className="font-normal text-ink-3">, {item.location}</span>
-                    </p>
-                  </div>
-                  <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
-                    {current ? <span className="badge badge-success">{ui.experience.current}</span> : null}
-                    <span className="badge badge-accent">{item.kind}</span>
-                    <span className="badge badge-outline tabular-nums">{formatRange(item.start, item.end, ui.present)}</span>
-                  </div>
-                </header>
+    <Reveal>
+      <ol className="entry-list">
+        {items.map((item) => {
+          const Icon = kindIcons[item.kind];
+          const current = item.end === null;
+          const detailed = Boolean(item.summary || item.highlights?.length || item.results?.length || item.tools?.length);
+          return (
+            <li key={item.id} className={cn("entry", current && "entry-current")}>
+              <p className="entry-when">
+                <span>{formatRange(item.start, item.end, ui.present)}</span>
+                {current ? (
+                  <span className="entry-now">
+                    <Khatam className="size-3.5" />
+                    {ui.experience.current}
+                  </span>
+                ) : null}
+              </p>
+              <div className="entry-main">
+                <h3 className="entry-title">{item.role}</h3>
+                <p className="entry-sub">
+                  {item.organization}
+                  <span>, {item.location}</span>
+                </p>
                 {detailed ? (
                   <div className="mt-4">
                     {item.summary ? <p className="copy max-w-[70ch]">{item.summary}</p> : null}
@@ -70,11 +68,15 @@ export function ExperienceList({ items }: { items: Experience[] }) {
                     ) : null}
                   </div>
                 ) : null}
-              </article>
-            </Reveal>
-          </li>
-        );
-      })}
-    </ol>
+              </div>
+              <p className="entry-aside">
+                <Icon aria-hidden="true" className="size-4 shrink-0" />
+                {item.kind}
+              </p>
+            </li>
+          );
+        })}
+      </ol>
+    </Reveal>
   );
 }

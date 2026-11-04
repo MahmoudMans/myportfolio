@@ -12,6 +12,7 @@ export function CvPreview() {
     <Section
       {...sections.cv}
       band
+      rail
       action={
         <div className="flex flex-wrap gap-3">
           <ButtonLink href="/cv.pdf" download={site.cvFileName} icon={<Download aria-hidden="true" className="size-4" />}>

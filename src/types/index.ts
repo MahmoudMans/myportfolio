@@ -99,17 +99,26 @@ export type ShowcaseChipIcon = "work" | "study" | "community";
 
 export type ScanVerdict = "clean" | "suspicious" | "malicious";
 
+export interface ShowcaseFile {
+  name: string;
+  verdict: ScanVerdict;
+  label: string;
+  result: string;
+  weights: number[];
+}
+
 export interface HeroShowcase {
   projectSlug: string;
   appName: string;
   status: string;
+  scanningStatus: string;
   listTitle: string;
-  files: { name: string; verdict: ScanVerdict; label: string }[];
+  files: ShowcaseFile[];
+  selectedFile: string;
+  scanLabel: string;
   featuresTitle: string;
-  features: { name: string; weight: number }[];
+  featureNames: string[];
   verdictLabel: string;
-  verdictName: string;
-  verdictFile: string;
   chips: { icon: ShowcaseChipIcon; value: string; label: string }[];
   chipsLabel: string;
   caption: string;
@@ -211,6 +220,7 @@ export interface ProjectSummary {
   stack: string[];
   cover: ImageAsset;
   links: ResourceLink[];
+  proof: ProjectFact[];
 }
 
 export type ResearchIcon = "software" | "vulnerability" | "systems" | "ai";

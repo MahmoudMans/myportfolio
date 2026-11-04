@@ -29,7 +29,7 @@ export const sections = {
   cv: {
     id: "cv",
     title: "Education",
-    intro: "A Master's in cybersecurity on top of a software engineering degree. The full CV is interactive and downloadable.",
+    intro: "A Master's in cybersecurity on top of a software engineering degree. The full CV is one page, printable and downloadable.",
   },
   certifications: {
     id: "certifications",
@@ -76,8 +76,8 @@ export const pageCopy = {
   },
   cv: {
     title: "CV",
-    description: "Interactive CV of Mahmoud Mansouri: education, experience, certifications, skills and languages, with a downloadable PDF.",
-    intro: "Switch between education, experience, certifications and skills, or download the same content as a PDF.",
+    description: "CV of Mahmoud Mansouri on one page: experience, education, certifications, skills and languages, ready to print or download as a PDF.",
+    intro: "Everything on one page, laid out like a printed CV. Print it from here, or download the PDF.",
   },
   notFound: {
     title: "This page does not exist",

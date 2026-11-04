@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { GitHubIcon, LinkedInIcon } from "@/components/icons/brand-icons";
 import { Lattice } from "@/components/ui/lattice";
+import { Rosette } from "@/components/ui/rosette";
 import { profile } from "@/data/profile";
 import { sections } from "@/data/sections";
 import { ui } from "@/data/ui";
@@ -21,6 +22,7 @@ export function ContactSection() {
       <div className="page-shell">
         <div className="contact-panel">
           <Lattice className="contact-panel-lattice" />
+          <Rosette className="contact-rosette" />
           <div className="relative grid grid-cols-1 items-center gap-10 p-6 sm:p-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14 lg:p-14">
             <div className="min-w-0">
               <h2 id={headingId} className="section-title">
