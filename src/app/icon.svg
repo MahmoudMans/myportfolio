@@ -1,15 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <style>
-    .tile { fill: #1450cc; }
-    .star { fill: none; stroke: #ffffff; stroke-width: 3.4; stroke-linejoin: round; }
-    .dot { fill: #ffffff; }
-    @media (prefers-color-scheme: dark) {
-      .tile { fill: #86abff; }
-      .star { stroke: #0a1322; }
-      .dot { fill: #0a1322; }
-    }
-  </style>
-  <rect class="tile" width="64" height="64" rx="14"/>
-  <path class="star" d="M32 8.5 38.88 15.38 48.62 15.38 48.62 25.12 55.5 32 48.62 38.88 48.62 48.62 38.88 48.62 32 55.5 25.12 48.62 15.38 48.62 15.38 38.88 8.5 32 15.38 25.12 15.38 15.38 25.12 15.38Z"/>
-  <circle class="dot" cx="32" cy="32" r="4.5"/>
+  <rect width="64" height="64" rx="11" fill="#05070a"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="9.5" fill="none" stroke="#00ff9c" stroke-opacity=".35" stroke-width="1.5"/>
+  <path d="M32 9.3l17.3 7.5v13c0 10.9-7.2 20.3-17.3 24.8-10.1-4.5-17.3-13.9-17.3-24.8v-13z" fill="none" stroke="#00ff9c" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M24 32l5.9 5.9L40.6 27" fill="none" stroke="#00ff9c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

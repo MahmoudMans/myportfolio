@@ -1,19 +1,33 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import { IBM_Plex_Mono, Sora } from "next/font/google";
 import type { ReactNode } from "react";
-import "@fontsource-variable/schibsted-grotesk/wght.css";
 import "./globals.css";
-import { SiteShell } from "@/components/layout/site-shell";
+import { Atmosphere, BootScreen, Overlays, ReportDialog, StatusStrip, TerminalWindow, ViewerDialog } from "@/components/console/chrome";
+import { SiteFooter } from "@/components/console/footer";
+import { Rail } from "@/components/console/rail";
+import { RuntimeHost } from "@/components/console/runtime-host";
+import { consoleCopy } from "@/data/console";
 import { site } from "@/data/site";
+import { consoleData, HOME } from "@/lib/console/content";
 import { ogImage } from "@/lib/metadata";
 
-const headingFont = localFont({
-  src: "../fonts/bricolage-grotesque.woff",
-  weight: "500 800",
-  style: "normal",
+const monoFont = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
   display: "swap",
-  variable: "--font-bricolage",
+  variable: "--font-plex",
 });
+
+const sansFont = Sora({
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+  display: "swap",
+  variable: "--font-sora",
+});
+
+/* Runs before the first paint: decides whether the boot sequence plays, and hides content that is typed in
+   later. If the page script has not started after six seconds, everything is shown as plain text instead. */
+const PREPAINT = `(function(){var d=document.documentElement;d.classList.add('js');var p=true;try{p=!localStorage.getItem('secfolio:boot')&&!matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(p)d.classList.add('booting');setTimeout(function(){if(d.getAttribute('data-runtime')!=='ready'){d.setAttribute('data-fallback','1');d.classList.remove('js','booting')}},6000)})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -44,18 +58,34 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f5f0" },
-    { media: "(prefers-color-scheme: dark)", color: "#06101f" },
-  ],
-  colorScheme: "light dark",
+  themeColor: "#05070a",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+  const data = consoleData();
   return (
-    <html lang="en" className={headingFont.variable} suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang="en" className={`${monoFont.variable} ${sansFont.variable}`} suppressHydrationWarning data-scroll-behavior="smooth">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: PREPAINT }} />
+      </head>
       <body>
-        <SiteShell>{children}</SiteShell>
+        <a className="skip" href="#main">
+          {consoleCopy.skipToContent}
+        </a>
+        <Atmosphere />
+        <BootScreen />
+        <StatusStrip />
+        <Rail home={HOME} sections={data.sections} cvFileName={site.cvFileName} />
+        <div className="shell">
+          <main id="main">{children}</main>
+          <SiteFooter />
+        </div>
+        <TerminalWindow />
+        <ReportDialog />
+        <ViewerDialog />
+        <Overlays />
+        <RuntimeHost data={data} />
       </body>
     </html>
   );

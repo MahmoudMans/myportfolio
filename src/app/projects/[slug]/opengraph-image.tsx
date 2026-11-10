@@ -1,15 +1,12 @@
 import { ImageResponse } from "next/og";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
-import { octagram, toPath } from "@/lib/geometry";
-import { getProject } from "@/lib/projects";
+import { caseFiles } from "@/lib/console/content";
+import { OG, OG_SIZE, OgGrid, OgShield, ogFonts } from "@/lib/console/og";
 
 export const alt = `A project by ${profile.name}`;
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = "image/png";
-
-const stars = [0, 1, 2, 3].flatMap((row) => [0, 1, 2].map((column) => toPath(octagram(60 + column * 120, 60 + row * 120, 60))));
-const mark = toPath(octagram(28, 28, 22));
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -17,92 +14,56 @@ export function generateStaticParams() {
 
 export default async function ProjectOpengraphImage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = getProject(slug);
-  const title = project?.title ?? profile.name;
-  const kind = project?.kind ?? profile.headline;
-  const stack = project?.stack.slice(0, 4) ?? [];
+  const file = caseFiles.find((entry) => entry.slug === slug);
+  const title = file?.title ?? profile.name;
+  const kind = file?.kind ?? profile.headline;
+  const stack = file?.tech.slice(0, 4) ?? [];
+  const isPublic = file?.statusClass === "deployed";
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          position: "relative",
-          background: "linear-gradient(135deg, #0f2366 0%, #081227 55%, #060d1c 100%)",
-          color: "#eef3fa",
-        }}
-      >
-        <svg
-          width="360"
-          height="480"
-          viewBox="0 0 360 480"
-          style={{ position: "absolute", right: 64, top: 75, opacity: 0.32 }}
-        >
-          {stars.map((d, index) => (
-            <path key={d} d={d} fill="none" stroke={index % 2 === 0 ? "#8db0ff" : "#f2b84b"} strokeWidth="2" strokeLinejoin="round" />
-          ))}
-        </svg>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            width: "100%",
-            height: "100%",
-            padding: "72px 80px",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", background: OG.bg, color: OG.fg, fontFamily: "Plex" }}>
+        <OgGrid />
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: "100%", height: "100%", padding: "64px 76px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
+            <OgShield size={56} />
+            <div style={{ display: "flex", fontSize: 24, color: OG.dim }}>CASE {file?.no ?? ""}</div>
             <div
               style={{
                 display: "flex",
-                width: 64,
-                height: 64,
                 alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 16,
-                background: "#1e4fd8",
+                gap: 10,
+                padding: "6px 14px",
+                border: `2px solid ${isPublic ? OG.accent : OG.dim}`,
+                color: isPublic ? OG.accent : OG.dim,
+                fontSize: 20,
+                letterSpacing: "1px",
               }}
             >
-              <svg width="40" height="40" viewBox="0 0 56 56">
-                <path d={mark} fill="none" stroke="#ffffff" strokeWidth="4" strokeLinejoin="round" />
-                <circle cx="28" cy="28" r="6" fill="#ffffff" />
-              </svg>
+              <div style={{ display: "flex", width: 10, height: 10, borderRadius: 10, background: isPublic ? OG.accent : OG.dim }} />
+              {file?.status ?? ""}
             </div>
-            <div style={{ display: "flex", fontSize: 28, color: "#bac5d7" }}>{profile.name}</div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", maxWidth: 820 }}>
-            <div style={{ display: "flex", fontSize: 28, color: "#f2b84b" }}>{kind}</div>
-            <div style={{ display: "flex", marginTop: 16, fontSize: title.length > 18 ? 66 : 80, fontWeight: 700, letterSpacing: "-2px", lineHeight: 1.04 }}>
+          <div style={{ display: "flex", flexDirection: "column", maxWidth: 1000 }}>
+            <div style={{ display: "flex", fontSize: 26, color: OG.amber }}>{kind}</div>
+            <div style={{ display: "flex", marginTop: 16, fontSize: title.length > 18 ? 70 : 84, fontWeight: 600, letterSpacing: "-3px", lineHeight: 1.04, color: "#ffffff" }}>
               {title}
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 32 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
               {stack.map((item) => (
-                <div
-                  key={item}
-                  style={{
-                    display: "flex",
-                    padding: "8px 20px",
-                    border: "2px solid #2d4877",
-                    borderRadius: 999,
-                    fontSize: 24,
-                    color: "#bac6db",
-                  }}
-                >
+                <div key={item} style={{ display: "flex", padding: "8px 18px", border: `1px solid ${OG.line}`, background: "rgba(0,255,156,0.04)", fontSize: 22, color: OG.dim }}>
                   {item}
                 </div>
               ))}
             </div>
           </div>
-          <div style={{ display: "flex", gap: 12 }}>
-            <div style={{ display: "flex", width: 160, height: 8, borderRadius: 4, background: "#8db0ff" }} />
-            <div style={{ display: "flex", width: 60, height: 8, borderRadius: 4, background: "#f2b84b" }} />
+          <div style={{ display: "flex", alignItems: "center", paddingTop: 22, borderTop: `1px solid ${OG.line}`, fontSize: 22, color: OG.dim }}>
+            <span style={{ color: OG.accent }}>TLP:CLEAR</span>
+            <span style={{ marginLeft: 18 }}>Case file by {profile.name}</span>
           </div>
         </div>
       </div>
     ),
-    { ...size },
+    { ...size, fonts: await ogFonts() },
   );
 }

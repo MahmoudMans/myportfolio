@@ -1,33 +1,50 @@
-import { ArrowLeft, Layers } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button-link";
-import { Lattice } from "@/components/ui/lattice";
-import { SearchSiteButton } from "@/components/ui/not-found-actions";
-import { QuarantineWindow } from "@/components/ui/quarantine-window";
-import { pageCopy } from "@/data/sections";
-import { ui } from "@/data/ui";
+import Link from "next/link";
+import { Icon } from "@/components/console/icon";
+import { Command } from "@/components/console/section-head";
+import { consoleCopy } from "@/data/console";
 
 export default function NotFound() {
+  const copy = consoleCopy.notFound;
   return (
-    <section className="hero">
-      <Lattice className="hero-lattice" />
-      <div className="page-shell relative grid min-h-[70svh] grid-cols-1 items-center gap-x-14 gap-y-12 py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:py-20">
-        <div className="min-w-0">
-          <p className="badge badge-outline w-fit">{ui.notFound.code}</p>
-          <h1 className="mt-4 max-w-[18ch] font-heading text-[clamp(2.5rem,7vw,4.5rem)] font-extrabold leading-[0.98] tracking-[-0.012em] text-ink text-balance">
-            {pageCopy.notFound.title}
+    <section className="sec page-sec notfound" aria-labelledby="h-404">
+      <div className="wrap">
+        <header className="sec-head">
+          <Command cmd={`${copy.cmd} ./requested-page`} />
+          <h1 className="glitch reveal" id="h-404" data-text={copy.title}>
+            {copy.title}
           </h1>
-          <p className="lead mt-5 max-w-[56ch]">{pageCopy.notFound.body}</p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <ButtonLink href="/" icon={<ArrowLeft aria-hidden="true" className="size-4" />}>
-              {ui.notFound.home}
-            </ButtonLink>
-            <SearchSiteButton label={ui.notFound.search} />
-            <ButtonLink href="/projects" variant="ghost" icon={<Layers aria-hidden="true" className="size-4" />}>
-              {ui.notFound.projects}
-            </ButtonLink>
+        </header>
+        <div className="panel nf-term reveal">
+          <div className="panel-head">
+            <span>
+              <Icon name="terminal" /> bash
+            </span>
+            <span className="err">exit 1</span>
+          </div>
+          <div className="panel-body">
+            <p className="err mono">
+              bash: {copy.cmd}: <span id="nfPath">./requested-page</span>: {copy.error}
+            </p>
+            <p className="nf-body">{copy.body}</p>
+            <ul className="nf-links">
+              <li>
+                <Link className="btn btn-primary" href="/">
+                  <Icon name="back" /> {copy.home}
+                </Link>
+              </li>
+              <li>
+                <Link className="btn" href="/projects">
+                  <Icon name="file" /> {copy.projects}
+                </Link>
+              </li>
+              <li>
+                <Link className="btn" href="/cv">
+                  <Icon name="user" /> {copy.cv}
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
-        <QuarantineWindow />
       </div>
     </section>
   );

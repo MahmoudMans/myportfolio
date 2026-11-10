@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { CertificationsSection } from "@/components/sections/certifications";
-import { CommunitySection } from "@/components/sections/community";
-import { ContactSection } from "@/components/sections/contact";
-import { CvPreview } from "@/components/sections/cv-preview";
-import { ExperienceSection } from "@/components/sections/experience";
-import { Hero } from "@/components/sections/hero";
-import { LanguagesSection } from "@/components/sections/languages";
-import { NowSection } from "@/components/sections/now";
-import { ProjectsPreview } from "@/components/sections/projects-preview";
-import { ResearchPreview } from "@/components/sections/research-preview";
-import { SkillsSection } from "@/components/sections/skills";
-import { TimelineSection } from "@/components/sections/timeline";
+import { AboutSection } from "@/components/home/about";
+import { BadgesSection } from "@/components/home/badges";
+import { CareerLogSection } from "@/components/home/career-log";
+import { CaseFilesSection } from "@/components/home/case-files";
+import { CommunitySection } from "@/components/home/community";
+import { ContactSection } from "@/components/home/contact";
+import { HeroSection } from "@/components/home/hero";
+import { ResearchSection } from "@/components/home/research";
+import { SkillsSection } from "@/components/home/skills";
+import { SocSection } from "@/components/home/soc";
 import { education } from "@/data/education";
 import { experience } from "@/data/experience";
 import { languages } from "@/data/languages";
@@ -45,17 +43,15 @@ export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personData }} />
-      <Hero />
-      <NowSection />
-      <ExperienceSection />
-      <ProjectsPreview />
-      <ResearchPreview />
-      <CvPreview />
-      <CertificationsSection />
-      <CommunitySection />
+      <HeroSection />
+      <AboutSection />
+      <ResearchSection />
       <SkillsSection />
-      <TimelineSection />
-      <LanguagesSection />
+      <SocSection />
+      <CaseFilesSection />
+      <CareerLogSection />
+      <BadgesSection />
+      <CommunitySection />
       <ContactSection />
     </>
   );

@@ -1,16 +1,10 @@
-import { Download, MapPin } from "lucide-react";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { PrintButton } from "@/components/cv/print-button";
-import { GitHubIcon, LinkedInIcon } from "@/components/icons/brand-icons";
-import { CertificationList } from "@/components/sections/certifications";
-import { EducationList } from "@/components/sections/education-list";
-import { ExperienceList } from "@/components/sections/experience-list";
-import { ButtonLink } from "@/components/ui/button-link";
-import { Khatam, MarkedName } from "@/components/ui/khatam";
-import { LevelMeter } from "@/components/ui/level-meter";
-import { PageHeader } from "@/components/ui/section";
-import { TagList } from "@/components/ui/tags";
+import { Icon } from "@/components/console/icon";
+import { SectionHead } from "@/components/console/section-head";
 import { certifications } from "@/data/certifications";
+import { consoleCopy } from "@/data/console";
 import { education } from "@/data/education";
 import { experience } from "@/data/experience";
 import { languages } from "@/data/languages";
@@ -19,6 +13,7 @@ import { pageCopy } from "@/data/sections";
 import { site } from "@/data/site";
 import { skillGroups } from "@/data/skills";
 import { ui } from "@/data/ui";
+import { monthLabel } from "@/lib/console/content";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -27,123 +22,152 @@ export const metadata: Metadata = pageMetadata({
   path: "/cv",
 });
 
-function SheetTitle({ id, children }: { id: string; children: string }) {
+function CvSection({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <h2 id={id} className="cv-section-title">
-      <Khatam className="cv-section-mark" />
+    <section className="cv-section" aria-labelledby={id}>
+      <h2 className="cv-title" id={id}>
+        <span aria-hidden="true">##</span> {title}
+      </h2>
       {children}
-    </h2>
+    </section>
   );
 }
 
 export default function CvPage() {
+  const copy = consoleCopy.cv;
   const links = (["linkedin", "github"] as const).flatMap((kind) => profile.socials.filter((social) => social.kind === kind));
-
   return (
-    <>
-      <PageHeader
-        title={pageCopy.cv.title}
-        intro={pageCopy.cv.intro}
-        actions={
-          <>
-            <ButtonLink href="/cv.pdf" download={site.cvFileName} icon={<Download aria-hidden="true" className="size-4" />}>
-              {ui.cv.download}
-            </ButtonLink>
-            <PrintButton label={ui.cv.print} />
-          </>
-        }
-      />
-      <div className="page-shell cv-page">
-        <article className="cv-sheet" aria-label={ui.cv.sheetLabel}>
-          <header className="cv-sheet-head">
-            <div className="min-w-0">
-              <p className="cv-name">
-                <MarkedName name={profile.name} />
-              </p>
+    <section className="sec page-sec cv-page" id="cv" aria-labelledby="h-cv">
+      <div className="wrap">
+        <SectionHead copy={consoleCopy.pages.cv} headingId="h-cv" level={1}>
+          <div className="cv-actions reveal">
+            <a className="btn btn-primary" href="/cv.pdf" download={site.cvFileName}>
+              <Icon name="download" /> {copy.download}
+            </a>
+            <PrintButton label={copy.print} />
+          </div>
+        </SectionHead>
+        <article className="panel cv-sheet reveal" aria-label={ui.cv.sheetLabel}>
+          <div className="panel-head cv-panel-head">
+            <span>
+              <Icon name="file" /> {copy.panel}
+            </span>
+            <span>{copy.pages}</span>
+          </div>
+          <header className="cv-head">
+            <div>
+              <p className="cv-name">{profile.name}</p>
               <p className="cv-role">{profile.headline}</p>
             </div>
             <ul className="cv-contact" aria-label={ui.cv.contact}>
               <li>
-                <MapPin aria-hidden="true" className="size-4 shrink-0" />
-                <span>{profile.location}</span>
+                <Icon name="pin" /> {profile.location}
               </li>
               {links.map((link) => (
                 <li key={link.kind}>
-                  <a href={link.href} target="_blank" rel="noopener noreferrer" className="cv-contact-link">
-                    {link.kind === "github" ? <GitHubIcon className="size-4 shrink-0" /> : <LinkedInIcon className="size-4 shrink-0" />}
-                    <span>{link.handle}</span>
-                    <span className="sr-only">
-                      , {link.label} {ui.externalSuffix}
-                    </span>
+                  <Icon name={link.kind === "github" ? "code" : "user"} />
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.handle}
                   </a>
                 </li>
               ))}
             </ul>
           </header>
-
-          <div className="cv-sheet-body">
+          <div className="cv-body">
             <div className="cv-main">
-              <section aria-labelledby="cv-profile" className="cv-section">
-                <SheetTitle id="cv-profile">{ui.cv.profile}</SheetTitle>
-                <div className="space-y-3">
-                  {profile.bio.slice(0, 2).map((paragraph) => (
-                    <p key={paragraph} className="copy max-w-[68ch]">
-                      {paragraph}
-                    </p>
+              <CvSection id="cv-profile" title={ui.cv.profile}>
+                {profile.bio.slice(0, 2).map((paragraph) => (
+                  <p key={paragraph} className="cv-text">
+                    {paragraph}
+                  </p>
+                ))}
+              </CvSection>
+              <CvSection id="cv-experience" title={ui.cv.experience}>
+                <ol className="cv-list">
+                  {experience.map((item) => (
+                    <li key={item.id}>
+                      <p className="cv-item-title">
+                        {item.role}, <span>{item.organization}</span>
+                      </p>
+                      <p className="cv-item-meta">
+                        {monthLabel(item.start)} to {item.end ? monthLabel(item.end) : ui.present}, {item.location}
+                      </p>
+                      {item.highlights && item.highlights.length > 0 ? (
+                        <ul className="log-list">
+                          {item.highlights.map((highlight) => (
+                            <li key={highlight}>{highlight}</li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </li>
                   ))}
-                </div>
-              </section>
-              <section aria-labelledby="cv-experience" className="cv-section">
-                <SheetTitle id="cv-experience">{ui.cv.experience}</SheetTitle>
-                <ExperienceList items={experience} />
-              </section>
-              <section aria-labelledby="cv-education" className="cv-section">
-                <SheetTitle id="cv-education">{ui.cv.education}</SheetTitle>
-                <EducationList items={education} />
-              </section>
-              <section aria-labelledby="cv-certifications" className="cv-section">
-                <SheetTitle id="cv-certifications">{ui.cv.certifications}</SheetTitle>
-                <CertificationList items={certifications} />
-              </section>
+                </ol>
+              </CvSection>
+              <CvSection id="cv-education" title={ui.cv.education}>
+                <ol className="cv-list">
+                  {education.map((item) => (
+                    <li key={item.id}>
+                      <p className="cv-item-title">
+                        {item.degree}, <span>{item.institution}</span>
+                      </p>
+                      <p className="cv-item-meta">
+                        {item.start} to {item.end}, {item.location}
+                      </p>
+                    </li>
+                  ))}
+                </ol>
+              </CvSection>
+              <CvSection id="cv-certifications" title={ui.cv.certifications}>
+                <ol className="cv-list">
+                  {certifications.map((item) => (
+                    <li key={item.id}>
+                      <p className="cv-item-title">
+                        {item.name}, <span>{item.issuer}</span>
+                      </p>
+                      <p className="cv-item-meta">
+                        {item.date ? monthLabel(item.date) : ui.certifications.noDate}, {item.kind}
+                      </p>
+                    </li>
+                  ))}
+                </ol>
+              </CvSection>
             </div>
-
             <div className="cv-aside">
-              <section aria-labelledby="cv-availability" className="cv-section">
-                <SheetTitle id="cv-availability">{ui.cv.availability}</SheetTitle>
-                <p className="flex items-start gap-2.5 font-display text-[0.9375rem] font-semibold leading-snug text-ink">
-                  <span className="status-dot status-dot-open mt-1.5 shrink-0" aria-hidden="true" />
-                  {profile.availability.detail}
+              <CvSection id="cv-availability" title={ui.cv.availability}>
+                <p className="cv-status">
+                  <i className="pulse" /> {profile.availability.detail}
                 </p>
-              </section>
-              <section aria-labelledby="cv-skills" className="cv-section">
-                <SheetTitle id="cv-skills">{ui.cv.skills}</SheetTitle>
-                <div className="cv-skill-groups">
+              </CvSection>
+              <CvSection id="cv-skills" title={ui.cv.skills}>
+                <div className="cv-skills">
                   {skillGroups.map((group) => (
                     <div key={group.id}>
                       <h3 className="cv-skill-title">{group.title}</h3>
-                      <TagList items={group.skills.map((skill) => skill.name)} label={group.title} variant="inline" className="mt-1" />
+                      <p className="cv-skill-list">{group.skills.map((skill) => skill.name).join(", ")}</p>
                     </div>
                   ))}
                 </div>
-              </section>
-              <section aria-labelledby="cv-languages" className="cv-section">
-                <SheetTitle id="cv-languages">{ui.cv.languages}</SheetTitle>
+              </CvSection>
+              <CvSection id="cv-languages" title={ui.cv.languages}>
                 <ul className="cv-languages">
                   {languages.map((language) => (
                     <li key={language.name}>
-                      <span className="font-display font-bold text-ink">{language.name}</span>
-                      <span className="cv-language-level">
+                      <span>{language.name}</span>
+                      <span className="cv-level">
                         {language.level}
-                        <LevelMeter level={language.score} label={language.level} className="cv-meter" />
+                        <span className="cv-meter" aria-hidden="true">
+                          {"■".repeat(language.score)}
+                          <span>{"□".repeat(5 - language.score)}</span>
+                        </span>
                       </span>
                     </li>
                   ))}
                 </ul>
-              </section>
+              </CvSection>
             </div>
           </div>
         </article>
       </div>
-    </>
+    </section>
   );
 }

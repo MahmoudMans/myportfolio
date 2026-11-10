@@ -1,12 +1,11 @@
 "use client";
 
-import { Printer } from "lucide-react";
+import { Icon } from "@/components/console/icon";
 
 export function PrintButton({ label }: { label: string }) {
   return (
-    <button type="button" onClick={() => window.print()} className="btn btn-secondary">
-      <Printer aria-hidden="true" className="size-4" />
-      <span>{label}</span>
+    <button className="btn" type="button" onClick={() => window.print()}>
+      <Icon name="printer" /> {label}
     </button>
   );
 }

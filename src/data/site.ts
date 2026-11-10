@@ -29,6 +29,6 @@ export const site: SiteConfig = {
   ],
   ogImageAlt: "Mahmoud Mansouri, software engineer and cybersecurity student",
   ogTagline: "Software engineer and Master's student in cybersecurity.",
-  footerNote: "Designed and built in Tunisia. Set in Bricolage Grotesque and Schibsted Grotesk.",
+  footerNote: "Designed and built in Tunisia. Set in IBM Plex Mono and Sora.",
   cvFileName: "Mahmoud-Mansouri-CV.pdf",
 };

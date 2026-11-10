@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { ProjectsExplorer, ProjectsExplorerFromUrl } from "@/components/projects/projects-explorer";
-import { PageHeader } from "@/components/ui/section";
-import { projectTags } from "@/data/projects";
+import { SectionHead } from "@/components/console/section-head";
+import { CaseGrid } from "@/components/projects/case-grid";
+import { consoleCopy } from "@/data/console";
 import { pageCopy } from "@/data/sections";
+import { caseFiles } from "@/lib/console/content";
 import { pageMetadata } from "@/lib/metadata";
-import { getProjectSummaries } from "@/lib/projects";
 
 export const metadata: Metadata = pageMetadata({
   title: pageCopy.projects.title,
@@ -14,15 +13,12 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function ProjectsPage() {
-  const summaries = getProjectSummaries();
   return (
-    <>
-      <PageHeader title={pageCopy.projects.title} intro={pageCopy.projects.intro} deep />
-      <div className="page-shell py-12 pb-24 sm:py-16">
-        <Suspense fallback={<ProjectsExplorer projects={summaries} tags={projectTags} />}>
-          <ProjectsExplorerFromUrl projects={summaries} tags={projectTags} />
-        </Suspense>
+    <section className="sec page-sec" id="all-projects" aria-labelledby="h-all-projects">
+      <div className="wrap">
+        <SectionHead copy={consoleCopy.pages.projects} headingId="h-all-projects" level={1} />
+        <CaseGrid files={caseFiles} search />
       </div>
-    </>
+    </section>
   );
 }

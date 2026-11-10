@@ -1,16 +1,14 @@
 import { ImageResponse } from "next/og";
+import { consoleCopy } from "@/data/console";
 import { profile } from "@/data/profile";
 import { site } from "@/data/site";
-import { octagram, toPath } from "@/lib/geometry";
+import { OG, OG_SIZE, OgGrid, OgShield, ogFonts } from "@/lib/console/og";
 
 export const alt = site.ogImageAlt;
-export const size = { width: 1200, height: 630 };
+export const size = OG_SIZE;
 export const contentType = "image/png";
 
-const stars = [0, 1, 2, 3].flatMap((row) => [0, 1, 2].map((column) => toPath(octagram(60 + column * 120, 60 + row * 120, 60))));
-const mark = toPath(octagram(28, 28, 22));
-
-export default function OpengraphImage() {
+export default async function OpengraphImage() {
   return new ImageResponse(
     (
       <div
@@ -19,64 +17,48 @@ export default function OpengraphImage() {
           height: "100%",
           display: "flex",
           position: "relative",
-          background: "linear-gradient(135deg, #0f2366 0%, #081227 55%, #060d1c 100%)",
-          color: "#eef3fa",
+          background: OG.bg,
+          color: OG.fg,
+          fontFamily: "Plex",
         }}
       >
-        <svg
-          width="360"
-          height="480"
-          viewBox="0 0 360 480"
-          style={{ position: "absolute", right: 64, top: 75, opacity: 0.5 }}
-        >
-          {stars.map((d, index) => (
-            <path key={d} d={d} fill="none" stroke={index % 2 === 0 ? "#8db0ff" : "#f2b84b"} strokeWidth="2" strokeLinejoin="round" />
-          ))}
-        </svg>
+        <OgGrid />
         <div
           style={{
+            position: "absolute",
+            right: -160,
+            top: -120,
+            width: 720,
+            height: 720,
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            width: "100%",
-            height: "100%",
-            padding: "72px 80px",
+            background: "radial-gradient(circle, rgba(0,255,156,0.16), rgba(0,255,156,0) 65%)",
           }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            <div
-              style={{
-                display: "flex",
-                width: 64,
-                height: 64,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 16,
-                background: "#1e4fd8",
-              }}
-            >
-              <svg width="40" height="40" viewBox="0 0 56 56">
-                <path d={mark} fill="none" stroke="#ffffff" strokeWidth="4" strokeLinejoin="round" />
-                <circle cx="28" cy="28" r="6" fill="#ffffff" />
-              </svg>
-            </div>
-            <div style={{ display: "flex", fontSize: 28, color: "#bac5d7" }}>{profile.location}</div>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", maxWidth: 780 }}>
-            <div style={{ display: "flex", fontSize: 88, fontWeight: 700, letterSpacing: "-3px", lineHeight: 1 }}>
-              {profile.name}
-            </div>
-            <div style={{ display: "flex", marginTop: 28, fontSize: 34, lineHeight: 1.3, color: "#bac5d7" }}>
-              {site.ogTagline}
+        />
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: "100%", height: "100%", padding: "64px 76px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
+            <OgShield />
+            <div style={{ display: "flex", fontSize: 26, color: OG.dim }}>
+              <span style={{ color: OG.accent }}>visitor@{consoleCopy.handle}:~$</span>
+              <span style={{ marginLeft: 14 }}>whoami</span>
             </div>
           </div>
-          <div style={{ display: "flex", gap: 12 }}>
-            <div style={{ display: "flex", width: 160, height: 8, borderRadius: 4, background: "#8db0ff" }} />
-            <div style={{ display: "flex", width: 60, height: 8, borderRadius: 4, background: "#f2b84b" }} />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", fontSize: 92, fontWeight: 600, letterSpacing: "-4px", lineHeight: 1, color: "#ffffff" }}>{profile.name}</div>
+            <div style={{ display: "flex", alignItems: "center", marginTop: 26, fontSize: 34, color: OG.accent }}>
+              <span style={{ color: OG.faint, marginRight: 16 }}>&gt;</span>
+              {consoleCopy.titles[0]}
+              <div style={{ display: "flex", width: 20, height: 38, marginLeft: 8, background: OG.accent }} />
+            </div>
+            <div style={{ display: "flex", marginTop: 22, maxWidth: 900, fontSize: 28, lineHeight: 1.35, color: OG.dim }}>{site.ogTagline}</div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, paddingTop: 22, borderTop: `1px solid ${OG.line}`, fontSize: 22, color: OG.dim }}>
+            <div style={{ display: "flex", width: 12, height: 12, borderRadius: 12, background: OG.accent }} />
+            <span style={{ color: OG.fg }}>{profile.availability.label}</span>
+            <span style={{ marginLeft: "auto" }}>{profile.location}</span>
           </div>
         </div>
       </div>
     ),
-    { ...size },
+    { ...size, fonts: await ogFonts() },
   );
 }
